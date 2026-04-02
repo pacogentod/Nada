@@ -1,0 +1,1820 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Playlist 🎵</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lato:wght@300;400&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --bg-dark:     #1a0e12;
+  --bg-mid:      #2a1820;
+  --bg-card:     #221318;
+  --bg-elevated: #2f1a22;
+  --rose:        #e8608a;
+  --rose-light:  #f4a0bc;
+  --blush:       #c96080;
+  --gold:        #c9a96e;
+  --text-bright: #f9ede8;
+  --text-mid:    #d4a0b0;
+  --text-soft:   #a07080;
+  --text-muted:  #6a4050;
+  --border:      #5a2540;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family:'Lato', sans-serif;
+  font-weight:300;
+  color:var(--text-bright);
+  background:var(--bg-dark);
+  min-height:100vh;
+  overflow-x:hidden;
+  padding-bottom:200px;
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ctext y='20' font-size='16'%3E🌸%3C/text%3E%3C/svg%3E"), auto;
+}
+
+/* ── BG ── */
+.luxury-bg {
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:
+    radial-gradient(ellipse at 10% 20%, #6b1a3544 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 15%, #4a102844 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 85%, #3d1a2855 0%, transparent 55%),
+    linear-gradient(160deg, #1a0e12 0%, #2a1820 50%, #1e0f15 100%);
+  z-index:-2;
+  animation:bgPulse 12s ease-in-out infinite alternate;
+}
+@keyframes bgPulse { from{opacity:.85} to{opacity:1} }
+.luxury-bg::after {
+  content:""; position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='1' fill='%23e8608a' fill-opacity='0.04'/%3E%3C/svg%3E");
+  z-index:-1; pointer-events:none;
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  padding:60px 48px 0;
+  max-width:1100px; margin:0 auto;
+  animation:fadeDown .8s ease both;
+}
+.page-eyebrow {
+  font-family:'Great Vibes', cursive;
+  font-size:20px; color:var(--gold);
+  display:block; margin-bottom:8px; opacity:.85;
+}
+.page-title {
+  font-family:'Cormorant Garamond', serif;
+  font-size:clamp(38px,6vw,68px); font-weight:300;
+  color:var(--text-bright); letter-spacing:-1px; line-height:1.1;
+}
+.page-title em { font-style:italic; color:var(--rose); }
+.page-rule {
+  margin-top:20px; height:1px;
+  background:linear-gradient(90deg, var(--border), transparent);
+}
+
+/* ── LIBRARY ── */
+.library {
+  max-width:1100px; margin:0 auto;
+  padding:48px 48px 0;
+}
+
+.lib-label {
+  font-size:10px; letter-spacing:4px; text-transform:uppercase;
+  color:var(--text-muted); margin-bottom:28px;
+}
+
+/* ── ALBUMS GRID ── */
+.albums-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(190px,1fr));
+  gap:28px;
+  margin-bottom:16px;
+}
+
+.album-card {
+  cursor:pointer;
+  border-radius:14px;
+  padding:16px;
+  background:var(--bg-card);
+  border:1px solid transparent;
+  transition:background .25s, border-color .25s, transform .3s, box-shadow .3s;
+  position:relative; overflow:hidden;
+  animation:fadeDown .6s ease both;
+}
+.album-card:nth-child(2) { animation-delay:.1s; }
+
+.album-card::before {
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(135deg,#ffffff04,transparent);
+  pointer-events:none;
+}
+.album-card:hover {
+  background:var(--bg-elevated);
+  border-color:var(--border);
+  transform:translateY(-6px);
+  box-shadow:0 16px 48px #00000055;
+}
+.album-card:hover .album-play-btn {
+  opacity:1; transform:translateY(0) scale(1);
+}
+.album-card.active-card {
+  border-color:var(--rose);
+  background:var(--bg-elevated);
+}
+
+.album-cover-wrap { position:relative; margin-bottom:14px; }
+.album-cover, .album-cover-ph {
+  width:100%; aspect-ratio:1/1;
+  border-radius:10px; display:block;
+  box-shadow:0 8px 28px #00000055;
+}
+.album-cover { object-fit:cover; background:var(--bg-mid); }
+.album-cover-ph {
+  background:linear-gradient(135deg,var(--bg-mid),var(--border));
+  display:none; align-items:center; justify-content:center;
+  font-size:48px;
+}
+
+.album-play-btn {
+  position:absolute; bottom:10px; right:10px;
+  width:46px; height:46px;
+  background:var(--rose); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:17px; color:white;
+  box-shadow:0 4px 16px #e8608a66;
+  opacity:0; transform:translateY(8px) scale(.9);
+  transition:opacity .25s, transform .25s;
+  border:none; cursor:pointer;
+}
+
+.album-name {
+  font-family:'Cormorant Garamond', serif;
+  font-size:16px; font-weight:600;
+  color:var(--text-bright);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.album-artist { font-size:12px; color:var(--text-soft); margin-top:3px; }
+.album-meta   { font-size:11px; color:var(--text-muted); margin-top:6px; letter-spacing:1px; }
+
+/* ── ALBUM PANEL ── */
+.album-panel {
+  display:none;
+  max-width:1100px; margin:0 auto;
+  padding:0 48px;
+}
+.album-panel.open {
+  display:block;
+  animation:panelOpen .35s ease both;
+}
+@keyframes panelOpen {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.panel-inner {
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  overflow:hidden;
+  margin-bottom:40px;
+}
+
+/* panel header */
+.panel-header {
+  display:flex; align-items:flex-end; gap:28px;
+  padding:32px 32px 24px;
+  background:linear-gradient(180deg,var(--bg-elevated) 0%,var(--bg-card) 100%);
+  border-bottom:1px solid var(--border);
+  position:relative;
+}
+.panel-cover {
+  width:130px; height:130px; flex-shrink:0;
+  object-fit:cover; border-radius:10px;
+  box-shadow:0 12px 36px #00000066;
+  background:var(--bg-mid);
+}
+.panel-cover-ph {
+  width:130px; height:130px; flex-shrink:0;
+  border-radius:10px;
+  background:linear-gradient(135deg,var(--bg-mid),var(--border));
+  display:none; align-items:center; justify-content:center;
+  font-size:50px; box-shadow:0 12px 36px #00000066;
+}
+.panel-meta { flex:1; }
+.panel-type {
+  font-size:10px; letter-spacing:4px; text-transform:uppercase;
+  color:var(--text-muted); margin-bottom:8px;
+}
+.panel-title {
+  font-family:'Cormorant Garamond', serif;
+  font-size:clamp(22px,3.5vw,38px); font-weight:600;
+  color:var(--text-bright); line-height:1.15;
+  font-style:italic;
+}
+.panel-artist { font-size:14px; color:var(--text-mid); margin-top:8px; }
+.panel-count  { font-size:12px; color:var(--text-muted); margin-top:8px; }
+
+.panel-close {
+  position:absolute; top:16px; right:16px;
+  width:34px; height:34px; border-radius:50%;
+  background:#ffffff0e; border:none; color:var(--text-soft);
+  font-size:16px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:.2s;
+}
+.panel-close:hover { background:var(--border); color:var(--text-bright); }
+
+/* track list */
+.track-list { padding:8px 0 20px; }
+
+.track-list-header {
+  display:grid;
+  grid-template-columns:44px 1fr 100px 64px;
+  padding:8px 32px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:4px;
+}
+.track-list-header span {
+  font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--text-muted);
+}
+.col-dur { text-align:right; }
+
+.track-row {
+  display:grid;
+  grid-template-columns:44px 1fr 100px 64px;
+  align-items:center;
+  padding:10px 32px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:background .2s;
+  margin:2px 8px;
+}
+.track-row:hover { background:var(--bg-elevated); }
+.track-row.playing { background:#e8608a12; }
+
+/* number / play icon toggle */
+.t-num {
+  font-size:14px; color:var(--text-muted); text-align:center;
+}
+.t-icon {
+  display:none; font-size:13px;
+  color:var(--text-soft); text-align:center;
+}
+.track-row:hover .t-num { display:none; }
+.track-row:hover .t-icon { display:block; color:var(--text-bright); }
+.track-row.playing .t-num { display:none; }
+.track-row.playing .t-icon { display:block; color:var(--rose); }
+
+/* track info */
+.t-info { display:flex; align-items:center; gap:14px; min-width:0; }
+.t-cover {
+  width:44px; height:44px; border-radius:6px;
+  object-fit:cover; flex-shrink:0;
+  background:var(--bg-mid); box-shadow:0 2px 8px #00000044;
+}
+.t-cover-ph {
+  width:44px; height:44px; border-radius:6px; flex-shrink:0;
+  background:var(--bg-mid); display:none;
+  align-items:center; justify-content:center; font-size:20px;
+}
+.t-text { min-width:0; }
+.t-name {
+  font-size:14px; color:var(--text-bright); font-weight:400;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.track-row.playing .t-name { color:var(--rose); }
+.t-artist { font-size:12px; color:var(--text-soft); margin-top:2px; }
+
+.t-album { font-size:13px; color:var(--text-soft);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t-dur   { font-size:13px; color:var(--text-soft); text-align:right; }
+
+/* ── MINI PLAYER (bottom) ── */
+.mini-player {
+  background:#0d080bef;
+  backdrop-filter:blur(16px);
+  border-top:1px solid var(--border);
+  padding:12px 36px;
+  display:flex;
+  align-items:center;
+  gap:24px;
+  pointer-events:all;
+}
+
+.mp-cover {
+  width:48px; height:48px; border-radius:7px;
+  object-fit:cover; flex-shrink:0;
+  background:var(--bg-mid);
+  box-shadow:0 2px 10px #00000055;
+}
+.mp-info { flex:0 0 200px; min-width:0; }
+.mp-title  { font-size:14px; color:var(--text-bright); font-weight:400;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.mp-artist { font-size:12px; color:var(--text-soft); margin-top:2px; }
+
+.mp-center {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; gap:8px;
+}
+.mp-btns { display:flex; align-items:center; gap:20px; }
+.mp-btn {
+  background:none; border:none; color:var(--text-soft);
+  font-size:16px; cursor:pointer;
+  transition:color .15s, transform .15s; padding:2px;
+}
+.mp-btn:hover { color:white; transform:scale(1.15); }
+.mp-btn-play {
+  width:36px; height:36px; border-radius:50%;
+  background:white; color:#0d080b;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; border:none; cursor:pointer;
+  box-shadow:0 2px 12px #ffffff22;
+  transition:transform .15s;
+}
+.mp-btn-play:hover { transform:scale(1.1); color:#0d080b; }
+
+.mp-prog-row { display:flex; align-items:center; gap:10px; width:100%; max-width:520px; }
+.mp-time { font-size:11px; color:var(--text-muted); min-width:30px; }
+.mp-time.right { text-align:right; }
+.mp-bar {
+  flex:1; height:3px; background:#ffffff15;
+  border-radius:10px; cursor:pointer; position:relative;
+}
+.mp-bar:hover { height:5px; margin:-1px 0; }
+.mp-bar-fill {
+  height:100%; background:white; border-radius:10px;
+  width:0%; transition:width .3s; position:relative;
+}
+.mp-bar-fill::after {
+  content:""; position:absolute; right:-5px; top:50%;
+  transform:translateY(-50%);
+  width:11px; height:11px; background:white; border-radius:50%;
+  opacity:0; transition:opacity .2s;
+}
+.mp-bar:hover .mp-bar-fill::after { opacity:1; }
+
+/* ── MESSAGE TAB BAR ── */
+.msg-bar {
+  position:fixed;
+  bottom:0; left:0; right:0;
+  z-index:200;
+  display:none;
+  flex-direction:column;
+  pointer-events:none;
+}
+.msg-bar.active { display:flex; }
+
+/* mini player sits on top */
+.mini-player {
+  position:relative;
+  z-index:2;
+  pointer-events:all;
+}
+
+/* tab handle — click to expand/collapse */
+.msg-tab-handle {
+  background:var(--bg-elevated);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:7px 36px;
+  display:flex; align-items:center; justify-content:space-between;
+  cursor:pointer; pointer-events:all;
+  transition:background .2s;
+  user-select:none;
+}
+.msg-tab-handle:hover { background:#3a2030; }
+
+.msg-tab-left {
+  display:flex; align-items:center; gap:10px;
+}
+.msg-tab-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--rose);
+  animation:dotPulse 2s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%     { opacity:.4; transform:scale(.7); }
+}
+.msg-tab-label {
+  font-size:11px; letter-spacing:3px; text-transform:uppercase;
+  color:var(--text-soft);
+}
+.msg-tab-arrow {
+  font-size:14px; color:var(--text-muted);
+  transition:transform .3s;
+}
+.msg-bar.expanded .msg-tab-arrow { transform:rotate(180deg); }
+
+/* message panel */
+.msg-panel {
+  background:#130a0f;
+  border-top:1px solid var(--border);
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .45s cubic-bezier(.4,0,.2,1);
+  pointer-events:all;
+}
+.msg-bar.expanded .msg-panel { max-height:320px; }
+
+.msg-panel-inner {
+  padding:28px 48px 32px;
+  display:flex; gap:36px; align-items:flex-start;
+}
+
+/* song cover thumbnail inside panel */
+.msg-panel-cover {
+  width:72px; height:72px; flex-shrink:0;
+  object-fit:cover; border-radius:8px;
+  box-shadow:0 4px 16px #00000066;
+  background:var(--bg-mid);
+}
+
+/* text */
+.msg-panel-text { flex:1; }
+.msg-panel-song {
+  font-family:'Cormorant Garamond', serif;
+  font-size:13px; font-style:italic;
+  color:var(--rose); margin-bottom:12px;
+  letter-spacing:.5px;
+}
+.msg-panel-body {
+  font-size:15px; line-height:1.9;
+  color:var(--text-mid);
+  animation:msgFadeIn .5s ease both;
+}
+.msg-panel-body em {
+  font-style:italic; color:var(--text-bright);
+}
+@keyframes msgFadeIn {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+@media (max-width:680px) {
+  .msg-panel-inner { padding:20px 20px 24px; gap:16px; }
+  .msg-panel-cover { width:52px; height:52px; }
+  .msg-panel-body  { font-size:14px; }
+  .msg-tab-handle  { padding:7px 20px; }
+}
+
+/* ════════════════════════════════════════
+   CURTAIN LINES — garis tirai di 4 sudut
+   Pure SVG inline, fixed position
+   ════════════════════════════════════════ */
+
+.curtain {
+  position:fixed;
+  pointer-events:none;
+  z-index:1;
+  opacity:1;
+}
+
+/* TOP-LEFT */
+.curtain-tl {
+  top:0; left:0;
+  width:260px; height:280px;
+}
+
+/* TOP-RIGHT */
+.curtain-tr {
+  top:0; right:0;
+  width:260px; height:280px;
+  transform:scaleX(-1); /* mirror horizontally */
+}
+
+/* BOTTOM-LEFT */
+.curtain-bl {
+  bottom:0; left:0;
+  width:220px; height:240px;
+  transform:scaleY(-1); /* mirror vertically */
+}
+
+/* BOTTOM-RIGHT */
+.curtain-br {
+  bottom:0; right:0;
+  width:220px; height:240px;
+  transform:scale(-1); /* mirror both */
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeDown {
+  from { opacity:0; transform:translateY(-16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* cover spin — pelan saat playing */
+@keyframes coverSpin {
+  from { transform:rotate(0deg); }
+  to   { transform:rotate(360deg); }
+}
+
+/* track row glow — berdenyut saat playing */
+@keyframes playingGlow {
+  0%, 100% { box-shadow:0 0 8px #e8608a18; border-color:#e8608a30; }
+  50%      { box-shadow:0 0 22px #e8608a50; border-color:#e8608a70; }
+}
+
+/* cover spinning class */
+.mp-cover.is-spinning {
+  animation:coverSpin 9s linear infinite;
+  box-shadow:0 0 0 2px #e8608a40, 0 0 20px #e8608a44, 0 2px 10px #00000055;
+  border-radius:50%; /* lingkaran saat putar */
+}
+
+/* body class: aktifkan glow di track yang sedang playing */
+body.now-playing .track-row.playing {
+  animation:playingGlow 2.2s ease-in-out infinite;
+}
+
+/* reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .mp-cover.is-spinning,
+  body.now-playing .track-row.playing { animation:none; }
+}
+
+/* ── FOTO GRID ── */
+.foto-grid {
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:14px;
+  padding:24px 32px 32px;
+}
+
+.foto-item {
+  position:relative;
+  border-radius:12px;
+  overflow:hidden;
+  border:2px solid var(--border);
+  background:var(--bg-mid);
+  aspect-ratio:1/1;
+  cursor:pointer;
+  box-shadow:0 4px 14px #00000040;
+  transition:transform .25s cubic-bezier(.23,1,.32,1),
+             box-shadow .25s,
+             border-color .25s;
+}
+.foto-item img {
+  width:100%; height:100%;
+  object-fit:cover; display:block;
+}
+.foto-ph {
+  display:none;
+  width:100%; height:100%;
+  align-items:center; justify-content:center;
+  font-size:36px; background:var(--bg-mid);
+}
+
+/* hover */
+.foto-item:hover {
+  transform:scale(1.04);
+  box-shadow:0 8px 28px #e8608a30;
+  border-color:var(--rose);
+}
+
+/* click pulse */
+@keyframes fotoGlow {
+  0%   { transform:scale(1); }
+  45%  { transform:scale(1.06); box-shadow:0 0 0 3px #e8608a55, 0 10px 32px #e8608a40; }
+  100% { transform:scale(1); }
+}
+.foto-item.clicked { animation:fotoGlow .3s ease forwards; }
+
+/* ── ZOOM MODAL ── */
+.foto-modal {
+  display:none;
+  position:fixed; inset:0; z-index:9000;
+  align-items:center; justify-content:center;
+}
+.foto-modal.open { display:flex; }
+
+/* backdrop */
+.foto-backdrop {
+  position:absolute; inset:0;
+  background:#00000088;
+  backdrop-filter:blur(6px);
+  animation:backdropIn .22s ease both;
+}
+@keyframes backdropIn {
+  from { opacity:0; } to { opacity:1; }
+}
+
+/* modal card */
+.foto-modal-card {
+  position:relative; z-index:1;
+  display:flex; gap:24px; align-items:flex-start;
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:24px;
+  max-width:720px; width:90vw;
+  max-height:88vh; overflow-y:auto;
+  box-shadow:0 24px 80px #000000aa;
+  animation:modalIn .28s cubic-bezier(.23,1,.32,1) both;
+}
+@keyframes modalIn {
+  from { opacity:0; transform:scale(.9) translateY(16px); }
+  to   { opacity:1; transform:scale(1)  translateY(0); }
+}
+
+/* image side */
+.foto-modal-img {
+  width:280px; flex-shrink:0;
+  border-radius:12px; overflow:hidden;
+  border:2px solid var(--border);
+  box-shadow:0 8px 28px #00000055;
+}
+.foto-modal-img img {
+  width:100%; display:block;
+  object-fit:cover;
+}
+
+/* notes side */
+.foto-modal-notes { flex:1; min-width:0; }
+.foto-modal-label {
+  font-family:'Great Vibes', cursive;
+  font-size:22px; color:var(--gold);
+  margin-bottom:14px; display:block;
+}
+.foto-modal-title {
+  font-family:'Cormorant Garamond', serif;
+  font-size:13px; font-style:italic;
+  color:var(--rose); letter-spacing:.5px;
+  margin-bottom:14px;
+}
+.foto-modal-text {
+  font-size:15px; line-height:1.9;
+  color:var(--text-mid);
+}
+.foto-modal-text em { font-style:italic; color:var(--text-bright); }
+
+/* close button */
+.foto-modal-close {
+  position:absolute; top:14px; right:14px;
+  width:32px; height:32px; border-radius:50%;
+  background:#ffffff0e; border:none;
+  color:var(--text-soft); font-size:15px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:.2s;
+}
+.foto-modal-close:hover { background:var(--border); color:var(--text-bright); }
+
+@media (max-width:620px) {
+  .foto-modal-card { flex-direction:column; padding:18px; }
+  .foto-modal-img  { width:100%; }
+}
+
+/* ── FOTO MODAL — typing text ── */
+@keyframes typeFade {
+  from { opacity:0; transform:translateY(6px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.foto-modal-text.typing {
+  animation:typeFade .45s ease both;
+}
+
+/* modal image fade-in */
+@keyframes imgReveal {
+  from { opacity:0; transform:scale(.96); }
+  to   { opacity:1; transform:scale(1); }
+}
+.foto-modal-img img.revealed {
+  animation:imgReveal .4s cubic-bezier(.23,1,.32,1) both;
+}
+@media (max-width:680px) {
+  .page-header, .library, .album-panel { padding-left:20px; padding-right:20px; }
+  .track-list-header, .track-row { grid-template-columns:40px 1fr 56px; }
+  .t-album { display:none; }
+  .panel-header { flex-direction:column; align-items:flex-start; }
+  .albums-grid { grid-template-columns:repeat(auto-fill,minmax(148px,1fr)); gap:16px; }
+  .mini-player { padding:10px 16px; gap:12px; }
+  .mp-info { flex:0 0 110px; }
+  .curtain-tl, .curtain-tr { width:140px; height:160px; }
+  .curtain-bl, .curtain-br { width:120px; height:130px; }
+  .foto-grid { grid-template-columns:repeat(3,1fr); gap:8px; padding:14px; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   ✦ LUXURY ENHANCEMENT LAYER ✦
+   Injected polish — no structural changes, only visual depth
+   ══════════════════════════════════════════════════════════ */
+
+/* ── 1. ENHANCED CSS VARIABLES ───────────────────────────── */
+:root {
+  --ease-smooth:  cubic-bezier(.23,1,.32,1);
+  --ease-spring:  cubic-bezier(.34,1.56,.64,1);
+  --ease-out:     cubic-bezier(.16,1,.3,1);
+  --t-fast:  .18s;
+  --t-med:   .28s;
+  --t-slow:  .42s;
+
+  /* glass */
+  --glass-bg:     rgba(34,19,24,.72);
+  --glass-border: rgba(232,96,138,.18);
+  --glass-blur:   14px;
+
+  /* glow values */
+  --glow-rose:    0 0 28px rgba(232,96,138,.32), 0 0 60px rgba(232,96,138,.14);
+  --glow-gold:    0 0 24px rgba(201,169,110,.28), 0 0 50px rgba(201,169,110,.10);
+
+  /* layered shadows */
+  --shadow-card:  0 2px 4px #00000040, 0 8px 20px #00000035, 0 20px 48px #00000025;
+  --shadow-panel: 0 4px 8px #00000050, 0 16px 40px #00000040, 0 40px 90px #00000030;
+  --shadow-modal: 0 8px 16px #00000060, 0 24px 60px #00000050, 0 60px 120px #00000040;
+}
+
+/* ── 2. GLASSMORPHISM — panel-inner, mini-player, modal card ─ */
+.panel-inner {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%) !important;
+  border-color: var(--glass-border) !important;
+  box-shadow: var(--shadow-panel) !important;
+}
+
+.mini-player {
+  background: rgba(13,8,11,.88) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  box-shadow: 0 -1px 0 var(--glass-border), var(--shadow-panel) !important;
+}
+
+.foto-modal-card {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(20px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+  border-color: var(--glass-border) !important;
+  box-shadow: var(--shadow-modal) !important;
+}
+
+/* ── 3. ALBUM CARD — deeper hover, shine, gradient overlay ── */
+.album-card {
+  transition:
+    background var(--t-med) var(--ease-smooth),
+    border-color var(--t-med) var(--ease-smooth),
+    transform var(--t-med) var(--ease-spring),
+    box-shadow var(--t-med) var(--ease-smooth) !important;
+  will-change: transform;
+}
+
+.album-card:hover {
+  transform: translateY(-10px) scale(1.015) !important;
+  box-shadow: var(--shadow-card), var(--glow-rose) !important;
+  border-color: var(--rose) !important;
+}
+
+/* shine sweep on album cover */
+.album-cover-wrap::after {
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: 10px;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255,255,255,.08) 50%,
+    transparent 70%
+  );
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity var(--t-fast) ease, transform 0s;
+  pointer-events: none;
+}
+.album-card:hover .album-cover-wrap::after {
+  opacity: 1;
+  transform: translateX(100%);
+  transition: opacity var(--t-fast) ease, transform .55s var(--ease-smooth);
+}
+
+/* gradient overlay on cover hover */
+.album-cover-wrap .album-cover {
+  transition: transform var(--t-slow) var(--ease-smooth),
+              filter var(--t-med) ease !important;
+  will-change: transform;
+}
+.album-card:hover .album-cover {
+  transform: scale(1.06) !important;
+  filter: brightness(1.06) saturate(1.1) !important;
+}
+
+/* play button reveal smoother */
+.album-play-btn {
+  transition: opacity var(--t-med) var(--ease-smooth),
+              transform var(--t-med) var(--ease-spring),
+              box-shadow var(--t-med) ease !important;
+}
+.album-card:hover .album-play-btn {
+  box-shadow: 0 0 0 6px rgba(232,96,138,.2), 0 4px 20px rgba(232,96,138,.5) !important;
+}
+
+/* ── 4. TRACK ROW — smoother hover ─────────────────────────── */
+.track-row {
+  transition: background var(--t-med) var(--ease-smooth),
+              box-shadow var(--t-med) ease,
+              border-color var(--t-med) ease !important;
+  border: 1px solid transparent;
+}
+.track-row:hover {
+  background: rgba(232,96,138,.08) !important;
+  border-color: rgba(232,96,138,.12) !important;
+}
+.track-row.playing {
+  border-color: rgba(232,96,138,.25) !important;
+}
+
+/* ── 5. MINI PLAYER — equalizer bars, progress glow, play pulse ─ */
+
+/* equalizer bars — shown via JS class .eq-active on body */
+.eq-bars {
+  display: none;
+  align-items: flex-end;
+  gap: 3px;
+  height: 18px;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+body.now-playing .eq-bars { display: flex; }
+
+.eq-bar {
+  width: 3px;
+  background: var(--rose);
+  border-radius: 2px;
+  transform-origin: bottom;
+  opacity: .85;
+}
+.eq-bar:nth-child(1) { animation: eqBounce 0.7s ease-in-out infinite alternate; }
+.eq-bar:nth-child(2) { animation: eqBounce 0.5s ease-in-out infinite alternate .1s; }
+.eq-bar:nth-child(3) { animation: eqBounce 0.9s ease-in-out infinite alternate .05s; }
+.eq-bar:nth-child(4) { animation: eqBounce 0.6s ease-in-out infinite alternate .15s; }
+
+@keyframes eqBounce {
+  from { height: 3px; opacity: .5; }
+  to   { height: 18px; opacity: 1; }
+}
+
+/* progress bar glow */
+.mp-bar-fill {
+  background: linear-gradient(90deg, var(--rose-light), var(--rose)) !important;
+  box-shadow: 0 0 8px rgba(232,96,138,.6), 0 0 18px rgba(232,96,138,.3) !important;
+  transition: width .25s ease !important;
+}
+
+/* play button pulse when active */
+body.now-playing .mp-btn-play {
+  box-shadow: 0 0 0 0 rgba(232,96,138,.5) !important;
+  animation: playPulse 1.8s ease-in-out infinite !important;
+}
+@keyframes playPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(232,96,138,.45); }
+  60%  { box-shadow: 0 0 0 8px rgba(232,96,138,.0); }
+  100% { box-shadow: 0 0 0 0 rgba(232,96,138,.0); }
+}
+
+/* cover spin + glow upgrade */
+.mp-cover {
+  transition: border-radius var(--t-slow) var(--ease-smooth),
+              box-shadow var(--t-slow) ease !important;
+}
+
+/* ── 6. MESSAGE PANEL — per-sentence fade, gradient texture ── */
+.msg-panel {
+  background: linear-gradient(
+    160deg,
+    #130a0f 0%,
+    #1e0e18 50%,
+    #130a0f 100%
+  ) !important;
+  /* subtle noise texture */
+  position: relative;
+}
+.msg-panel::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(232,96,138,.06) 0%, transparent 60%),
+    radial-gradient(circle at 80% 20%, rgba(201,169,110,.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.msg-panel-body {
+  /* staggered word reveal — applied by JS */
+}
+.msg-panel-body .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: wordReveal .4s var(--ease-out) forwards;
+}
+@keyframes wordReveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.msg-panel-song {
+  position: relative;
+}
+.msg-panel-song::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--rose), transparent);
+  margin-top: 6px;
+  transition: width .6s var(--ease-smooth);
+}
+.msg-bar.expanded .msg-panel-song::after { width: 100%; }
+
+/* ── 7. FOTO GALLERY — size variation, hover glow upgrade ─── */
+
+/* subtle size emphasis — first item slightly larger */
+.foto-grid .foto-item:nth-child(1) {
+  /* stays 1:1 but gets extra border glow when active album */
+}
+
+.foto-item {
+  transition:
+    transform var(--t-med) var(--ease-spring),
+    box-shadow var(--t-med) ease,
+    border-color var(--t-med) ease !important;
+}
+.foto-item:hover {
+  transform: scale(1.055) translateY(-3px) !important;
+  box-shadow: 0 12px 36px rgba(232,96,138,.35), 0 0 0 2px var(--rose) !important;
+  border-color: var(--rose) !important;
+  z-index: 2;
+}
+
+/* ── 8. FOTO MODAL — richer transition ──────────────────────── */
+.foto-modal-card {
+  transition: transform var(--t-slow) var(--ease-spring),
+              opacity var(--t-slow) ease !important;
+}
+
+.foto-modal-img {
+  position: relative; overflow: hidden;
+}
+.foto-modal-img::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 50%,
+    rgba(34,19,24,.6) 100%
+  );
+  pointer-events: none;
+  border-radius: 12px;
+}
+
+/* ── 10. PAGE HEADER — entrance animation, title glow ────────── */
+.page-header {
+  animation: headerReveal .9s var(--ease-out) both !important;
+}
+@keyframes headerReveal {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-title em {
+  /* golden shimmer on key word "Love" */
+  background: linear-gradient(
+    90deg,
+    var(--rose) 0%,
+    var(--rose-light) 40%,
+    var(--rose) 80%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: titleShimmer 3.5s linear infinite;
+}
+@keyframes titleShimmer {
+  to { background-position: 200% center; }
+}
+
+.page-eyebrow {
+  animation: fadeUp .7s var(--ease-out) .15s both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── 11. ALBUMS GRID — staggered entrance ───────────────────── */
+.album-card:nth-child(1) { animation-delay: .05s !important; }
+.album-card:nth-child(2) { animation-delay: .12s !important; }
+.album-card:nth-child(3) { animation-delay: .19s !important; }
+.album-card:nth-child(4) { animation-delay: .26s !important; }
+
+/* ── 13. ACTIVE CARD — rose border glow ────────────────────── */
+.album-card.active-card {
+  box-shadow: 0 0 0 1px var(--rose), var(--glow-rose) !important;
+}
+
+/* ── 14. PANEL HEADER — gradient overlay ─────────────────────── */
+.panel-header {
+  background: linear-gradient(
+    180deg,
+    rgba(47,26,34,.95) 0%,
+    rgba(34,19,24,.85) 100%
+  ) !important;
+}
+
+/* ── 15. lib-label fade in ──────────────────────────────────── */
+.lib-label {
+  animation: fadeUp .6s var(--ease-out) .4s both;
+}
+
+/* ── reduce motion respect ──────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="luxury-bg"></div>
+
+<!-- ══ CURTAIN SVGs — 4 corners ══ -->
+
+<!-- TOP-LEFT curtain -->
+<svg class="curtain curtain-tl" viewBox="0 0 260 280" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- main drape lines fanning from top-left corner -->
+  <line x1="0" y1="0" x2="260" y2="80"  stroke="#e8608a" stroke-width="0.8" opacity="0.35"/>
+  <line x1="0" y1="0" x2="240" y2="100" stroke="#e8608a" stroke-width="0.7" opacity="0.30"/>
+  <line x1="0" y1="0" x2="200" y2="130" stroke="#c9a96e" stroke-width="0.7" opacity="0.28"/>
+  <line x1="0" y1="0" x2="160" y2="160" stroke="#e8608a" stroke-width="0.6" opacity="0.25"/>
+  <line x1="0" y1="0" x2="120" y2="190" stroke="#c9a96e" stroke-width="0.6" opacity="0.22"/>
+  <line x1="0" y1="0" x2="80"  y2="220" stroke="#e8608a" stroke-width="0.5" opacity="0.20"/>
+  <line x1="0" y1="0" x2="40"  y2="260" stroke="#c9a96e" stroke-width="0.5" opacity="0.18"/>
+  <!-- arc connecting the drape tips -->
+  <path d="M 40 260 Q 140 210 260 80" stroke="#e8608a" stroke-width="0.8" opacity="0.22" stroke-dasharray="4 6"/>
+  <!-- decorative arc closer to corner -->
+  <path d="M 20 140 Q 80 80 140 20" stroke="#c9a96e" stroke-width="0.7" opacity="0.20" stroke-dasharray="3 8"/>
+  <!-- tiny diamond at anchor -->
+  <polygon points="0,0 5,8 0,16 -5,8" fill="#e8608a" opacity="0.5" transform="translate(3,3)"/>
+  <!-- dot accents along the outer arc -->
+  <circle cx="80"  cy="200" r="1.5" fill="#c9a96e" opacity="0.40"/>
+  <circle cx="140" cy="155" r="1.5" fill="#e8608a" opacity="0.40"/>
+  <circle cx="200" cy="110" r="1.5" fill="#c9a96e" opacity="0.40"/>
+  <circle cx="245" cy="68"  r="1.5" fill="#e8608a" opacity="0.40"/>
+</svg>
+
+<!-- TOP-RIGHT curtain (mirrored via CSS scaleX) -->
+<svg class="curtain curtain-tr" viewBox="0 0 260 280" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <line x1="0" y1="0" x2="260" y2="80"  stroke="#e8608a" stroke-width="0.8" opacity="0.35"/>
+  <line x1="0" y1="0" x2="240" y2="100" stroke="#e8608a" stroke-width="0.7" opacity="0.30"/>
+  <line x1="0" y1="0" x2="200" y2="130" stroke="#c9a96e" stroke-width="0.7" opacity="0.28"/>
+  <line x1="0" y1="0" x2="160" y2="160" stroke="#e8608a" stroke-width="0.6" opacity="0.25"/>
+  <line x1="0" y1="0" x2="120" y2="190" stroke="#c9a96e" stroke-width="0.6" opacity="0.22"/>
+  <line x1="0" y1="0" x2="80"  y2="220" stroke="#e8608a" stroke-width="0.5" opacity="0.20"/>
+  <line x1="0" y1="0" x2="40"  y2="260" stroke="#c9a96e" stroke-width="0.5" opacity="0.18"/>
+  <path d="M 40 260 Q 140 210 260 80" stroke="#e8608a" stroke-width="0.8" opacity="0.22" stroke-dasharray="4 6"/>
+  <path d="M 20 140 Q 80 80 140 20" stroke="#c9a96e" stroke-width="0.7" opacity="0.20" stroke-dasharray="3 8"/>
+  <polygon points="0,0 5,8 0,16 -5,8" fill="#e8608a" opacity="0.5" transform="translate(3,3)"/>
+  <circle cx="80"  cy="200" r="1.5" fill="#c9a96e" opacity="0.40"/>
+  <circle cx="140" cy="155" r="1.5" fill="#e8608a" opacity="0.40"/>
+  <circle cx="200" cy="110" r="1.5" fill="#c9a96e" opacity="0.40"/>
+  <circle cx="245" cy="68"  r="1.5" fill="#e8608a" opacity="0.40"/>
+</svg>
+
+<!-- BOTTOM-LEFT curtain (mirrored via CSS scaleY) -->
+<svg class="curtain curtain-bl" viewBox="0 0 220 240" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <line x1="0" y1="0" x2="220" y2="60"  stroke="#c9a96e" stroke-width="0.7" opacity="0.28"/>
+  <line x1="0" y1="0" x2="200" y2="80"  stroke="#e8608a" stroke-width="0.6" opacity="0.25"/>
+  <line x1="0" y1="0" x2="170" y2="110" stroke="#c9a96e" stroke-width="0.6" opacity="0.22"/>
+  <line x1="0" y1="0" x2="130" y2="145" stroke="#e8608a" stroke-width="0.5" opacity="0.20"/>
+  <line x1="0" y1="0" x2="90"  y2="175" stroke="#c9a96e" stroke-width="0.5" opacity="0.18"/>
+  <line x1="0" y1="0" x2="50"  y2="215" stroke="#e8608a" stroke-width="0.5" opacity="0.16"/>
+  <path d="M 50 215 Q 130 170 220 60" stroke="#c9a96e" stroke-width="0.7" opacity="0.18" stroke-dasharray="4 7"/>
+  <polygon points="0,0 4,7 0,14 -4,7" fill="#c9a96e" opacity="0.45" transform="translate(3,3)"/>
+  <circle cx="90"  cy="168" r="1.5" fill="#e8608a" opacity="0.35"/>
+  <circle cx="155" cy="118" r="1.5" fill="#c9a96e" opacity="0.35"/>
+  <circle cx="205" cy="72"  r="1.5" fill="#e8608a" opacity="0.35"/>
+</svg>
+
+<!-- BOTTOM-RIGHT curtain (mirrored via CSS scale(-1)) -->
+<svg class="curtain curtain-br" viewBox="0 0 220 240" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <line x1="0" y1="0" x2="220" y2="60"  stroke="#c9a96e" stroke-width="0.7" opacity="0.28"/>
+  <line x1="0" y1="0" x2="200" y2="80"  stroke="#e8608a" stroke-width="0.6" opacity="0.25"/>
+  <line x1="0" y1="0" x2="170" y2="110" stroke="#c9a96e" stroke-width="0.6" opacity="0.22"/>
+  <line x1="0" y1="0" x2="130" y2="145" stroke="#e8608a" stroke-width="0.5" opacity="0.20"/>
+  <line x1="0" y1="0" x2="90"  y2="175" stroke="#c9a96e" stroke-width="0.5" opacity="0.18"/>
+  <line x1="0" y1="0" x2="50"  y2="215" stroke="#e8608a" stroke-width="0.5" opacity="0.16"/>
+  <path d="M 50 215 Q 130 170 220 60" stroke="#c9a96e" stroke-width="0.7" opacity="0.18" stroke-dasharray="4 7"/>
+  <polygon points="0,0 4,7 0,14 -4,7" fill="#c9a96e" opacity="0.45" transform="translate(3,3)"/>
+  <circle cx="90"  cy="168" r="1.5" fill="#e8608a" opacity="0.35"/>
+  <circle cx="155" cy="118" r="1.5" fill="#c9a96e" opacity="0.35"/>
+  <circle cx="205" cy="72"  r="1.5" fill="#e8608a" opacity="0.35"/>
+</svg>
+
+<!-- ══ PAGE HEADER ══ -->
+<div class="page-header">
+  <span class="page-eyebrow">The meaning of my favorite songs</span>
+  <h1 class="page-title">My <em>Love</em>🎵</h1>
+  <div class="page-rule"></div>
+</div>
+
+<!-- ══ LIBRARY ══ -->
+<div class="library">
+  <div class="lib-label">Albums & Collections</div>
+
+  <div class="albums-grid">
+
+    <!-- ALBUM 1 -->
+    <div class="album-card" id="card-lagiPula" onclick="toggleAlbum('lagiPula')">
+      <div class="album-cover-wrap">
+        <img class="album-cover" src="Kawan.jpg" alt="Lagi pula hidup akan berakhir"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="album-cover-ph">🎵</div>
+        <button class="album-play-btn" onclick="event.stopPropagation();playTrack('berdansa')">▶</button>
+      </div>
+      <div class="album-name">Lagi pula hidup akan berakhir</div>
+      <div class="album-artist">Nada</div>
+      <div class="album-meta">11 · 04 · 2011</div>
+    </div>
+
+    <!-- ALBUM 2 -->
+    <div class="album-card" id="card-menari" onclick="toggleAlbum('menari')">
+      <div class="album-cover-wrap">
+        <img class="album-cover" src="Menari.jpg" alt="Menari"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="album-cover-ph">🎵</div>
+        <button class="album-play-btn" onclick="event.stopPropagation();playTrack('secukupnya')">▶</button>
+      </div>
+      <div class="album-name">Menari</div>
+      <div class="album-artist">Hindia</div>
+      <div class="album-meta">1 song · 2026</div>
+    </div>
+
+    <!-- ALBUM 3 -->
+    <div class="album-card" id="card-am" onclick="toggleAlbum('am')">
+      <div class="album-cover-wrap">
+        <img class="album-cover" src="AM.jpg" alt="AM"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="album-cover-ph">🎵</div>
+        <button class="album-play-btn" onclick="event.stopPropagation();playTrack('party')">▶</button>
+      </div>
+      <div class="album-name">AM</div>
+      <div class="album-artist">Arctic Monkeys</div>
+      <div class="album-meta">2 songs · 2026</div>
+    </div>
+
+    <!-- ALBUM 4 -->
+    <div class="album-card" id="card-favorit" onclick="toggleAlbum('favorit')">
+      <div class="album-cover-wrap">
+        <img class="album-cover" src="Nada.png" alt="Lagu Favorite Kita"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="album-cover-ph">🎵</div>
+      </div>
+      <div class="album-name">Lagu Favorite Kita</div>
+      <div class="album-artist">—</div>
+      <div class="album-meta">coming soon</div>
+    </div>
+
+  </div>
+
+  <!-- ══ PANEL: Lagi pula hidup akan berakhir ══ -->
+  <div class="album-panel" id="panel-lagiPula">
+    <div class="panel-inner">
+      <div class="panel-header">
+        <img class="panel-cover" src="Kawan.jpg" alt=""
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="panel-cover-ph">🎵</div>
+        <div class="panel-meta">
+          <div class="panel-type">Album</div>
+          <div class="panel-title">Lagi pula hidup<br>akan berakhir</div>
+          <div class="panel-artist">Various Artists</div>
+          <div class="panel-count">1 song</div>
+        </div>
+        <button class="panel-close" onclick="closeAlbum('lagiPula')">✕</button>
+      </div>
+
+      <div class="track-list">
+        <div class="track-list-header">
+          <span>#</span><span>Title</span><span>Album</span><span class="col-dur">⏱</span>
+        </div>
+
+        <div class="track-row" id="row-berdansa" onclick="playTrack('berdansa')">
+          <div class="t-num">1</div>
+          <div class="t-icon">▶</div>
+          <div class="t-info">
+            <img class="t-cover" src="Kawan.jpg" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="t-cover-ph">🎵</div>
+            <div class="t-text">
+              <div class="t-name">Berdansalah</div>
+              <div class="t-artist">Various Artists</div>
+            </div>
+          </div>
+          <div class="t-album">Lagi pula hidup akan berakhir</div>
+          <div class="t-dur" id="dur-berdansa">–:––</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PANEL: Menari ══ -->
+  <div class="album-panel" id="panel-menari">
+    <div class="panel-inner">
+      <div class="panel-header">
+        <img class="panel-cover" src="Menari.jpg" alt=""
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="panel-cover-ph">🎵</div>
+        <div class="panel-meta">
+          <div class="panel-type">Album</div>
+          <div class="panel-title">Menari</div>
+          <div class="panel-artist">Hindia</div>
+          <div class="panel-count">1 song</div>
+        </div>
+        <button class="panel-close" onclick="closeAlbum('menari')">✕</button>
+      </div>
+      <div class="track-list">
+        <div class="track-list-header">
+          <span>#</span><span>Title</span><span>Album</span><span class="col-dur">⏱</span>
+        </div>
+        <div class="track-row" id="row-secukupnya" onclick="playTrack('secukupnya')">
+          <div class="t-num">1</div>
+          <div class="t-icon">▶</div>
+          <div class="t-info">
+            <img class="t-cover" src="Menari.jpg" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="t-cover-ph">🎵</div>
+            <div class="t-text">
+              <div class="t-name">Secukupnya</div>
+              <div class="t-artist">Hindia</div>
+            </div>
+          </div>
+          <div class="t-album">Menari</div>
+          <div class="t-dur" id="dur-secukupnya">–:––</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PANEL: AM ══ -->
+  <div class="album-panel" id="panel-am">
+    <div class="panel-inner">
+      <div class="panel-header">
+        <img class="panel-cover" src="AM.jpg" alt=""
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="panel-cover-ph">🎵</div>
+        <div class="panel-meta">
+          <div class="panel-type">Album</div>
+          <div class="panel-title">AM</div>
+          <div class="panel-artist">Arctic Monkeys</div>
+          <div class="panel-count">2 songs</div>
+        </div>
+        <button class="panel-close" onclick="closeAlbum('am')">✕</button>
+      </div>
+      <div class="track-list">
+        <div class="track-list-header">
+          <span>#</span><span>Title</span><span>Album</span><span class="col-dur">⏱</span>
+        </div>
+
+        <div class="track-row" id="row-party" onclick="playTrack('party')">
+          <div class="t-num">1</div>
+          <div class="t-icon">▶</div>
+          <div class="t-info">
+            <img class="t-cover" src="AM.jpg" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="t-cover-ph">🎵</div>
+            <div class="t-text">
+              <div class="t-name">No. 1 Party Anthem</div>
+              <div class="t-artist">Arctic Monkeys</div>
+            </div>
+          </div>
+          <div class="t-album">AM</div>
+          <div class="t-dur" id="dur-party">–:––</div>
+        </div>
+
+        <div class="track-row" id="row-iwanna" onclick="playTrack('iwanna')">
+          <div class="t-num">2</div>
+          <div class="t-icon">▶</div>
+          <div class="t-info">
+            <img class="t-cover" src="AM.jpg" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="t-cover-ph">🎵</div>
+            <div class="t-text">
+              <div class="t-name">I Wanna Be Yours</div>
+              <div class="t-artist">Arctic Monkeys</div>
+            </div>
+          </div>
+          <div class="t-album">AM</div>
+          <div class="t-dur" id="dur-iwanna">–:––</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PANEL: Foto Kesayangan ══ -->
+  <div class="album-panel" id="panel-favorit">
+    <div class="panel-inner">
+      <div class="panel-header">
+        <img class="panel-cover" src="Nada.png" alt=""
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="panel-cover-ph">🌸</div>
+        <div class="panel-meta">
+          <div class="panel-type">Galeri Foto</div>
+          <div class="panel-title">Foto Kesayangan</div>
+          <div class="panel-artist">—</div>
+          <div class="panel-count">9 photos</div>
+        </div>
+        <button class="panel-close" onclick="closeAlbum('favorit')">✕</button>
+      </div>
+
+      <div class="foto-grid">
+        <div class="foto-item" onclick="openFotoModal(1)">
+          <img src="Cantik1.png" alt="Foto 1" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="foto-ph">🌸</div>
+        </div>
+        <div class="foto-item" onclick="openFotoModal(2)">
+          <img src="Cantik2.png" alt="Foto 2" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="foto-ph">🌸</div>
+        </div>
+        <div class="foto-item" onclick="openFotoModal(3)">
+          <img src="Cantik3.png" alt="Foto 3" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="foto-ph">🌸</div>
+        </div>
+        <div class="foto-item" onclick="openFotoModal(4)">
+          <img src="Cantik4.png" alt="Foto 4" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="foto-ph">🌸</div>
+        </div>
+        <div class="foto-item" onclick="openFotoModal(5)">
+          <img src="Cantik5.png" alt="Foto 5" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="foto-ph">🌸</div>
+        </div>
+        <div class="foto-item" onclick="openFotoModal(6)">
+          <img src="Cantik6.png" alt="Foto 6" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="foto-ph">🌸</div>
+        </div>
+        <div class="foto-item" onclick="openFotoModal(7)">
+          <img src="Cantik7.png" alt="Foto 7" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="foto-ph">🌸</div>
+        </div>
+        <div class="foto-item" onclick="openFotoModal(8)">
+          <img src="Cantik8.png" alt="Foto 8" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="foto-ph">🌸</div>
+        </div>
+        <div class="foto-item" onclick="openFotoModal(9)">
+          <img src="Cantik9.png" alt="Foto 9" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="foto-ph">🌸</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /library -->
+
+<!-- ══ FOTO ZOOM MODAL ══ -->
+<div class="foto-modal" id="fotoModal" onclick="handleModalBackdropClick(event)">
+  <div class="foto-backdrop"></div>
+  <div class="foto-modal-card" id="fotoModalCard">
+    <button class="foto-modal-close" onclick="closeFotoModal()">✕</button>
+    <div class="foto-modal-img">
+      <img id="fotoModalImg" src="" alt=""
+           onerror="this.style.opacity='.3'">
+    </div>
+    <div class="foto-modal-notes">
+      <span class="foto-modal-label">Notes 🌸</span>
+      <div class="foto-modal-title" id="fotoModalTitle">—</div>
+      <div class="foto-modal-text"  id="fotoModalText">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BOTTOM BAR: mini player + message tab ══ -->
+<div class="msg-bar" id="msgBar">
+
+  <!-- mini player -->
+  <div class="mini-player active" id="miniPlayer">
+    <img class="mp-cover" id="mp-cover" src="" alt="">
+    <div class="mp-info">
+      <div class="mp-title"  id="mp-title">—</div>
+      <div class="mp-artist" id="mp-artist">—</div>
+    </div>
+    <div class="mp-center">
+      <div class="mp-btns">
+        <button class="mp-btn" onclick="prevTrack()">⏮</button>
+        <button class="mp-btn-play" id="mp-playbtn" onclick="togglePlay()">▶</button>
+        <button class="mp-btn" onclick="nextTrack()">⏭</button>
+      </div>
+      <div class="mp-prog-row">
+        <span class="mp-time" id="mp-cur">0:00</span>
+        <div class="mp-bar" onclick="mpSeek(event)">
+          <div class="mp-bar-fill" id="mp-fill"></div>
+        </div>
+        <span class="mp-time right" id="mp-dur">0:00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- tab handle -->
+  <div class="msg-tab-handle" onclick="toggleMsg()">
+    <div class="msg-tab-left">
+      <div class="msg-tab-dot"></div>
+      <span class="msg-tab-label">Pesan dari lagu ini</span>
+    </div>
+    <span class="msg-tab-arrow">▲</span>
+  </div>
+
+  <!-- message panel -->
+  <div class="msg-panel">
+    <div class="msg-panel-inner">
+      <img class="msg-panel-cover" id="msg-cover" src="" alt="">
+      <div class="msg-panel-text">
+        <div class="msg-panel-song" id="msg-song-name">—</div>
+        <div class="msg-panel-body" id="msg-body">—</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<audio id="mainAudio" preload="auto"></audio>
+
+<script>
+/* ══ TRACK DATA ══ */
+var TRACKS = {
+  berdansa:   { src:"Berdansalah.mp3",        cover:"Kawan.jpg",  title:"Berdansalah",        artist:"Various Artists" },
+  secukupnya: { src:"secukupnya.mp3",          cover:"Menari.jpg", title:"Secukupnya",         artist:"Hindia" },
+  party:      { src:"No. 1 Party Anthem.mp3",  cover:"AM.jpg",     title:"No. 1 Party Anthem", artist:"Arctic Monkeys" },
+  iwanna:     { src:"I Wanna Be Yours.mp3",    cover:"AM.jpg",     title:"I Wanna Be Yours",   artist:"Arctic Monkeys" }
+};
+var ORDER = ["berdansa","secukupnya","party","iwanna"];
+
+/* ══ PESAN LAGU ══ */
+var MESSAGES = {
+  berdansa: "Jika tak ada yang peduli dengan mu, maka kamu bebas melakukan apapun yang kamu mau sekarang, Kebebasan bukan hal yang harus ditahan, Kalau hatimu pengen itu jangan kamu larang. Hidup ini tak ada arti nya maka kamu bebas mengarang maknanya seorang!.   -K",
+
+  secukupnya: "Hindia menulis ini sebagai pengingat bahwa kamu tidak harus selalu kuat. <em>Secukupnya saja — itu sudah lebih dari cukup.</em> Aku suka lagu ini karena mengingatkanku pada kamu, yang terkadang terlalu keras pada diri sendiri. Kamu boleh berhenti sejenak. Kamu boleh tidak sempurna. Dan kamu tetap lebih dari cukup di mataku. Dan aku ingin kamu tau kalau kamu boleh terlihat gagal padaku, karena aku pun tidak selalu sempurna, kita cukup jadi diri kita sendiri saja. -K",
+
+  party: "Kamu tau ga arti lagu ini?, ini tuh bercerita tentang seseorang yang ikut berpesta hanya untuk mencari seseorang yang disukai, tidak menikmati pestanya,namun hanya menginginkan perhatian dari orang tersebut namun orang tersebut tidak memerhatikan kamu, disaat semua orang menikmati pestanya, kamu hanya berharap dia akan memperhatikan kamu. Lagu ini tuh kayak gambaran aku yang selalu berharap kamu memperhatikan aku, tapi aku tau itu mustahil, karena aku bukan siapa-siapa buat kamu, aku cuma orang biasa yang selalu ada buat kamu, tapi kamu ga pernah melihatnya. -K",
+
+  iwanna: "<em>\"I wanna be yours\"</em> Aku yakin kamu sudah tau kalau aku sangat gila akan lagu ini, namun aku menyukainya bukan tanpa alasan, aku menyukai lagu ini dari sebelum kita kenal dengan harapan aku bisa menemukan seseorang yang mengerti diriku, dan sekarang aku sudah mendapatkannya, Nada. -K"
+};
+
+var audio      = document.getElementById("mainAudio");
+var currentKey = null;
+var isPlaying  = false;
+
+/* ══ FORMAT TIME ══ */
+function fmt(s){
+  s = Math.floor(s)||0;
+  return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+}
+
+/* ══ PLAY ICONS ══ */
+function setIcon(playing){
+  isPlaying = playing;
+  document.getElementById("mp-playbtn").textContent = playing ? "⏸" : "▶";
+
+  /* cover spin */
+  var cover = document.getElementById("mp-cover");
+  if(playing) cover.classList.add("is-spinning");
+  else        cover.classList.remove("is-spinning");
+
+  /* track row glow — aktif hanya saat playing */
+  if(playing) document.body.classList.add("now-playing");
+  else        document.body.classList.remove("now-playing");
+}
+
+/* ══ MESSAGE TAB ══ */
+function showMessage(key){
+  var t = TRACKS[key];
+  var m = MESSAGES[key];
+  if(!t||!m) return;
+
+  document.getElementById("msg-cover").src         = t.cover;
+  document.getElementById("msg-song-name").textContent = t.title + " — " + t.artist;
+  document.getElementById("msg-body").innerHTML    = m;
+
+  /* re-trigger animation */
+  var body = document.getElementById("msg-body");
+  body.style.animation = "none";
+  void body.offsetWidth;
+  body.style.animation = "";
+
+  document.getElementById("msgBar").classList.add("active");
+}
+
+function toggleMsg(){
+  document.getElementById("msgBar").classList.toggle("expanded");
+}
+
+/* ══ ALBUM TOGGLE ══ */
+function toggleAlbum(id){
+  var panel = document.getElementById("panel-"+id);
+  var card  = document.getElementById("card-"+id);
+  var isOpen = panel.classList.contains("open");
+
+  /* close all */
+  document.querySelectorAll(".album-panel").forEach(function(p){ p.classList.remove("open"); });
+  document.querySelectorAll(".album-card").forEach(function(c){ c.classList.remove("active-card"); });
+
+  if(!isOpen){
+    panel.classList.add("open");
+    card.classList.add("active-card");
+    setTimeout(function(){ panel.scrollIntoView({behavior:"smooth",block:"nearest"}); }, 80);
+  }
+}
+function closeAlbum(id){
+  document.getElementById("panel-"+id).classList.remove("open");
+  document.getElementById("card-"+id).classList.remove("active-card");
+}
+
+/* ══ PLAY TRACK ══ */
+function playTrack(key){
+  var t = TRACKS[key];
+  if(!t) return;
+
+  /* if same track → just toggle play/pause */
+  if(currentKey === key){
+    togglePlay(); return;
+  }
+
+  currentKey = key;
+  audio.src  = t.src;
+  audio.play().catch(function(){});
+  setIcon(true);
+
+  /* mini player */
+  document.getElementById("mp-cover").src            = t.cover;
+  document.getElementById("mp-title").textContent    = t.title;
+  document.getElementById("mp-artist").textContent   = t.artist;
+
+  /* show message tab (collapsed by default on new song) */
+  document.getElementById("msgBar").classList.remove("expanded");
+  showMessage(key);
+
+  /* highlight rows */
+  document.querySelectorAll(".track-row").forEach(function(r){ r.classList.remove("playing"); });
+  var row = document.getElementById("row-"+key);
+  if(row) row.classList.add("playing");
+}
+
+function togglePlay(){
+  if(isPlaying){ audio.pause(); setIcon(false); }
+  else         { audio.play().catch(function(){}); setIcon(true); }
+}
+
+function prevTrack(){
+  var idx  = ORDER.indexOf(currentKey);
+  var prev = ORDER[(idx-1+ORDER.length)%ORDER.length];
+  playTrack(prev);
+}
+function nextTrack(){
+  var idx  = ORDER.indexOf(currentKey);
+  var next = ORDER[(idx+1)%ORDER.length];
+  playTrack(next);
+}
+
+/* ══ PROGRESS ══ */
+audio.addEventListener("timeupdate", function(){
+  if(!audio.duration) return;
+  var pct = (audio.currentTime/audio.duration*100)+"%";
+  document.getElementById("mp-fill").style.width       = pct;
+  document.getElementById("mp-cur").textContent        = fmt(audio.currentTime);
+});
+audio.addEventListener("loadedmetadata", function(){
+  var d = fmt(audio.duration);
+  document.getElementById("mp-dur").textContent = d;
+  if(currentKey) document.getElementById("dur-"+currentKey).textContent = d;
+});
+audio.addEventListener("ended", nextTrack);
+
+function mpSeek(e){
+  if(!audio.duration) return;
+  var rect = e.currentTarget.getBoundingClientRect();
+  audio.currentTime = ((e.clientX-rect.left)/rect.width)*audio.duration;
+}
+
+/* preload durations */
+Object.keys(TRACKS).forEach(function(key){
+  var a = new Audio(TRACKS[key].src);
+  a.addEventListener("loadedmetadata", function(){
+    var el = document.getElementById("dur-"+key);
+    if(el) el.textContent = fmt(a.duration);
+  });
+});
+
+/* ══ FOTO NOTES DATA ══ */
+var FOTO_NOTES = {
+  1: { title:"Cantik1.png", text:"Dunia pun suatu hari akan usai, bintang-bintang pun juga tak selamanya menyala. Jadi tenanglah kita masih disini, berdua, menikmati waktu yang ada. Bersandarlah ceritakan lelah mu padaku" },
+  2: { title:"Cantik2.png", text:"Saat melihat kamu, rasanya tenang, aku pun bingung bagaimana bisa menjelaskan perasaan ini, tapi yang pasti aku sangat mengagumi kamu. I Love You Always, Pretty." },
+  3: { title:"Cantik3.png", text:"Aku suka setiap kali kamu cerita tentang diri kamu, terutama saat kamu sedang cerita kesalahan kamu, karena itu yang paling membuatku suka. Kamu tidak perlu jadi siapapun selain dirimu." },
+  4: { title:"Cantik4.png", text:"Segala masalah akan ku lewati jika ujung nya aku mendapatkan kamu🌷" },
+  5: { title:"Cantik5.png", text:"Entah bagaimana aku menjelaskan perasaan ini, namun yang pasti aku merasa sangat beruntung bisa mengenalmu dan memiliki kamu.. 💖" },
+  6: { title:"Cantik6.png", text:"Hanya karena kamu aku mau menjadi lebih baik dan kuat, aku ga mau mengecewakan orang lain lagi, kali ini akan ku usahakan segalanya. 🌸" },
+  7: { title:"Cantik7.png", text:"Geulis, Endah, Beautiful, Ayu, Pretty, Cute, Gorgeous, Cantik, Manis, Baik, Sabar, Tulus, Lembut, Warm, Dari semua itu hanya 1 yang paling tepat untuk kamu. <em>Sempurna.<em/> 💗" },
+  8: { title:"Cantik8.png", text:"Bahkan aku yang tidak ada spesial nya, kamu tetap memilihku. Aku gamau bikin kamu kecewa dan aku akan coba semua hal yang aku bisa. ✨" },
+  9: { title:"Cantik9.png", text:"Terima kasih ya sudah memilih aku, aku tidak akan menuntut apapun ke kamu, yang aku mau cuman 1, Ku mohon untuk bersabar selama kamu bersamaku ya??. -K 💖" }
+};
+
+/* ══ FOTO MODAL ══ */
+/* ══ AUDIO PER FOTO ══
+   Setiap foto punya lagu sendiri.
+   Audio akan play saat modal dibuka, stop saat ditutup.
+   ═══════════════════════════════════════════════════ */
+var FOTO_AUDIO = {
+  1: "bergema.mp3",
+  2: "Karna kamu.mp3",
+  3: "Mabuk cinta.mp3",
+  4: "Penjaga hati.mp3",
+  5: "Favorite ku.mp3",
+  6: "Nanti kita.mp3",
+  7: "Sempurna.mp3",
+  8: "Akad.mp3",
+  9: "Sorai.mp3"
+};
+
+/* instance audio aktif untuk foto — dipakai di seluruh fungsi */
+var fotoAudio = null;
+
+function _stopFotoAudio(){
+  if(fotoAudio){
+    fotoAudio.pause();
+    fotoAudio.currentTime = 0;
+    fotoAudio = null;
+  }
+}
+
+function openFotoModal(n){
+  var note = FOTO_NOTES[n];
+  if(!note) return;
+
+  document.getElementById("fotoModalImg").src       = "Cantik" + n + ".png";
+  document.getElementById("fotoModalImg").alt       = "Foto " + n;
+  document.getElementById("fotoModalTitle").textContent = "Foto " + n;
+  document.getElementById("fotoModalText").innerHTML    = note.text;
+
+  document.getElementById("fotoModal").classList.add("open");
+  document.body.style.overflow = "hidden";
+
+  /* ── Putar lagu khusus foto ini ── */
+  _stopFotoAudio();
+  if(FOTO_AUDIO[n]){
+    fotoAudio = new Audio(FOTO_AUDIO[n]);
+    fotoAudio.volume = 0.75;
+    fotoAudio.loop   = true;
+    fotoAudio.play().catch(function(){});
+  }
+}
+
+function closeFotoModal(){
+  document.getElementById("fotoModal").classList.remove("open");
+  document.body.style.overflow = "";
+
+  /* ── Hentikan lagu saat modal ditutup ── */
+  _stopFotoAudio();
+}
+
+function handleModalBackdropClick(e){
+  /* close only when clicking the backdrop, not the card */
+  if(e.target === document.getElementById("fotoModal") ||
+     e.target.classList.contains("foto-backdrop")){
+    closeFotoModal();
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   ✦ LUXURY JS ENHANCEMENT LAYER ✦
+   Micro-interactions, equalizer, word-reveal, ripple, flash
+   ══════════════════════════════════════════════════════════ */
+
+/* ── 1. INJECT EQ BARS into mini player ────────────────────── */
+(function injectEQ(){
+  var mpInfo = document.querySelector(".mp-info");
+  if(!mpInfo || !mpInfo.parentNode) return;
+  var eq = document.createElement("div");
+  eq.className = "eq-bars";
+  eq.innerHTML =
+    "<div class='eq-bar'></div>" +
+    "<div class='eq-bar'></div>" +
+    "<div class='eq-bar'></div>" +
+    "<div class='eq-bar'></div>";
+  mpInfo.parentNode.insertBefore(eq, mpInfo.nextSibling);
+})();
+
+/* ── 4. WORD-BY-WORD REVEAL helper ──────────────────────────── */
+function luxRevealWords(el){
+  if(!el) return;
+  var raw = el.innerHTML;
+  /* split preserving HTML tags and whitespace */
+  var tokens = raw.split(/(<[^>]+>|\s+)/g);
+  var delay = 0;
+  var out = tokens.map(function(tok){
+    if(!tok) return "";
+    if(/^</.test(tok) || /^\s+$/.test(tok)) return tok;
+    var s = '<span class="word" style="animation-delay:' + delay + 'ms">' + tok + '</span>';
+    delay += 36;
+    return s;
+  }).join("");
+  el.innerHTML = out;
+}
+
+/* ── 5. HOOK showMessage for word reveal ────────────────────── */
+var _origShowMessage = showMessage;
+showMessage = function(key){
+  _origShowMessage(key);
+  setTimeout(function(){
+    var body = document.getElementById("msg-body");
+    if(body) luxRevealWords(body);
+  }, 60);
+};
+
+/* ── 6. RIPPLE FACTORY ───────────────────────────────────────── */
+function addRipple(el, e, color){
+  color = color || "rgba(232,96,138,.12)";
+  var rect = el.getBoundingClientRect();
+  var size = Math.max(rect.width, rect.height) * 1.5;
+  var r = document.createElement("span");
+  r.style.cssText = [
+    "position:absolute",
+    "width:"  + size + "px",
+    "height:" + size + "px",
+    "left:"   + (e.clientX - rect.left  - size/2) + "px",
+    "top:"    + (e.clientY - rect.top   - size/2) + "px",
+    "border-radius:50%",
+    "background:" + color,
+    "transform:scale(0)",
+    "pointer-events:none",
+    "z-index:9",
+    "animation:rippleOut .55s ease forwards"
+  ].join(";");
+  el.style.position = "relative";
+  el.style.overflow = "hidden";
+  el.appendChild(r);
+  setTimeout(function(){ r.remove(); }, 580);
+}
+
+/* inject ripple keyframe once */
+(function(){
+  var s = document.createElement("style");
+  s.textContent = "@keyframes rippleOut{to{transform:scale(2.8);opacity:0}}";
+  document.head.appendChild(s);
+})();
+
+/* ── 7. ADD RIPPLE to track rows ────────────────────────────── */
+document.querySelectorAll(".track-row").forEach(function(row){
+  row.addEventListener("click", function(e){
+    addRipple(row, e, "rgba(232,96,138,.1)");
+  });
+});
+
+/* ── 8. ADD RIPPLE to album cards ───────────────────────────── */
+document.querySelectorAll(".album-card").forEach(function(card){
+  card.addEventListener("click", function(e){
+    if(e.target.classList.contains("album-play-btn")) return;
+    addRipple(card, e, "rgba(232,96,138,.08)");
+  });
+});
+
+/* ── 10. WORD REVEAL for foto modal text ────────────────────── */
+var _origOpenFotoModal = openFotoModal;
+openFotoModal = function(n){
+  _origOpenFotoModal(n);
+  setTimeout(function(){
+    var text = document.getElementById("fotoModalText");
+    if(text) luxRevealWords(text);
+  }, 290);
+};
+
+/* ── 11. STAGGER TRACK ROWS on album open ───────────────────── */
+var _origToggleAlbum = toggleAlbum;
+toggleAlbum = function(id){
+  _origToggleAlbum(id);
+  setTimeout(function(){
+    var panel = document.getElementById("panel-" + id);
+    if(!panel || !panel.classList.contains("open")) return;
+    panel.querySelectorAll(".track-row").forEach(function(row, i){
+      row.style.opacity    = "0";
+      row.style.transform  = "translateX(-14px)";
+      row.style.transition = "opacity .3s ease " + (50 + i*60) + "ms, transform .3s ease " + (50 + i*60) + "ms";
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          row.style.opacity   = "";
+          row.style.transform = "";
+        });
+      });
+    });
+    /* cleanup transitions after animation */
+    setTimeout(function(){
+      panel.querySelectorAll(".track-row").forEach(function(row){
+        row.style.transition = "";
+      });
+    }, 600);
+  }, 90);
+};
+</script>
+</body>
+</html>
